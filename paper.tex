@@ -75,7 +75,7 @@ crashes using GCC AddressSanitizer (ASAN). We further conduct three
 additional experiments: (1) a secure prompt ablation showing that
 explicit security instructions reduce the mean vulnerability rate by only
 4 percentage points (to 60.8\%), leaving four of five models at grade F;
-(2) a static tool comparison showing that seven industry-standard tools
+(2) a static tool comparison showing that six industry-standard tools
 (Semgrep, Bandit, Cppcheck, Clang SA, FlawFinder, and CodeQL
 security-extended) together detect fewer than 7.6\% of all artifacts,
 and miss 97.8\% of Z3-proven vulnerabilities, demonstrating a structural
@@ -121,7 +121,7 @@ crashes using GCC AddressSanitizer (ASAN). We further conduct three
 additional experiments: (1) a secure prompt ablation showing that
 explicit security instructions reduce the mean vulnerability rate by only
 4 percentage points (to 60.8\%), leaving four of five models at grade F;
-(2) a static tool comparison showing that all seven industry tools
+(2) a static tool comparison showing that all six industry tools
 combined flag only 7.6\% of artifacts, missing 97.8\% of formally
 Z3-proven vulnerabilities, demonstrating an 8.5$\times$ detection gap
 against COBALT; and (3) a generation--review
@@ -200,7 +200,7 @@ verification rather than pattern matching---producing mathematical proof
 of exploitability with concrete witness values; (2) we evaluate five
 current frontier models simultaneously across identical prompts; (3) we
 provide runtime exploitability confirmation via ASAN; and (4) we
-quantify the detection gap against seven industry tools, including
+quantify the detection gap against six industry tools, including
 heavyweight C analyzers and CodeQL, demonstrating that 97.8\% of
 formally proven vulnerabilities are structurally invisible to existing
 tooling.
@@ -494,7 +494,7 @@ Z3-proven vulnerabilities are invisible to all industry tools combined.
 
 \begin{table*}[t]
 \centering
-\caption{Detection Rate: COBALT vs.\ Seven Industry Tools}
+\caption{Detection Rate: COBALT vs.\ Six Industry Tools}
 \label{tab:tools}
 \begin{tabular}{lrrl}
 \toprule
@@ -562,8 +562,8 @@ it to review the code for security vulnerabilities.
 
 We fed all 89 valid Z3-proven artifacts back to their generating model
 and asked it to review the code for security vulnerabilities. (One
-artifact was excluded: INP-06, where the Python 3.12 runtime blocked
-the exploit before execution.) Of 89 artifacts reviewed, \textbf{70 of
+artifact was excluded due to a Mistral API timeout during the review
+pass.) Of 89 artifacts reviewed, \textbf{70 of
 89 (78.7\%)} were correctly identified as vulnerable by the generating
 model. Table~\ref{tab:selfreview} presents per-model results.
 
@@ -622,7 +622,7 @@ instruction-following surface.
 COBALT's detection advantage---64.8\% vs.\ 6.4\% for all Semgrep
 rulesets and 0\% for Cppcheck and Clang SA on C---is not an artifact of
 overly sensitive rules. Of the 90 Z3 SAT findings (formally proven with
-concrete witnesses), 97.8\% are invisible to all seven tools. The 2 Z3
+concrete witnesses), 97.8\% are invisible to all six tools. The 2 Z3
 SAT cases tools did catch (MEM-02, CWE-190) were flagged by Semgrep's
 \texttt{strcat} rule---detecting a dangerous string function in the same
 code, not the integer overflow that Z3 proved exploitable. CodeQL
