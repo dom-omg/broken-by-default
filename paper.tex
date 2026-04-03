@@ -121,9 +121,10 @@ crashes using GCC AddressSanitizer (ASAN). We further conduct three
 additional experiments: (1) a secure prompt ablation showing that
 explicit security instructions reduce the mean vulnerability rate by only
 4 percentage points (to 60.8\%), leaving four of five models at grade F;
-(2) a static tool comparison showing that Semgrep and Bandit together
-detect fewer than 5.2\% of the vulnerabilities identified by COBALT,
-demonstrating a 20$\times$ detection gap; and (3) a generation--review
+(2) a static tool comparison showing that all seven industry tools
+combined flag only 7.6\% of artifacts, missing 97.8\% of formally
+Z3-proven vulnerabilities, demonstrating an 8.5$\times$ detection gap
+against COBALT; and (3) a generation--review
 asymmetry experiment showing that models identify their own Z3-proven
 vulnerabilities 78.7\% of the time in review mode (70/89; per-model
 range: 67\%--100\%)---yet generate them anyway. Our results suggest that current LLMs produce
