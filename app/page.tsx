@@ -144,7 +144,7 @@ def hash_password(password: str) -> str:
             {[
               { num: "4/5", label: "AI Models — Grade F" },
               { num: "64.8%", label: "Average Vuln Rate" },
-              { num: "93%", label: "Missed by Semgrep" },
+              { num: "97.8%", label: "Z3-Proven — Invisible to All Tools" },
               { num: "96%", label: "Know Their Own Bugs" },
             ].map((stat) => (
               <div key={stat.label} style={{ textAlign: "center" }}>
@@ -264,14 +264,14 @@ def hash_password(password: str) -> str:
               <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", flexWrap: "wrap" }}>
                 <div style={{ background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.3)", borderRadius: "8px", padding: "10px 16px", flexShrink: 0 }}>
                   <div style={{ fontSize: "11px", color: "#3b82f6", fontWeight: 700, letterSpacing: "0.1em" }}>EXP 2</div>
-                  <div style={{ fontSize: "22px", fontWeight: 900, color: "#fff", marginTop: "2px" }}>93%</div>
+                  <div style={{ fontSize: "22px", fontWeight: 900, color: "#fff", marginTop: "2px" }}>97.8%</div>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
-                    &ldquo;Do 6 industry tools catch what COBALT finds?&rdquo;
+                    &ldquo;Do 6 industry tools catch what COBALT formally proves?&rdquo;
                   </div>
                   <p style={{ color: "#9ca3af", fontSize: "14px", lineHeight: 1.6, margin: "0 0 16px" }}>
-                    We ran two tool comparison experiments. First: all Semgrep rulesets + Bandit across all 250 artifacts — detected <strong style={{ color: "#fff" }}>7.6%</strong> of COBALT findings. Then we ran three heavyweight C analyzers (Cppcheck 2.13, Clang Static Analyzer, FlawFinder) against all 87 C artifacts. <strong style={{ color: "#dc2626" }}>Cppcheck and Clang SA both found zero.</strong>
+                    We ran 6 tools: Semgrep (all rulesets), Bandit, Cppcheck 2.13, Clang Static Analyzer, and FlawFinder. Of the <strong style={{ color: "#fff" }}>90 formally Z3-proven vulnerabilities</strong>, tools caught only 2 — and those 2 were flagged for a <strong style={{ color: "#dc2626" }}>different reason</strong> (strcat pattern in the same file, not the integer overflow Z3 proved). <strong style={{ color: "#dc2626" }}>97.8% of formally proven vulnerabilities are completely invisible to all 6 tools combined.</strong>
                   </p>
                   <div style={{ marginBottom: "10px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", color: "#6b7280" }}>PATTERN TOOLS — 250 ARTIFACTS</div>
                   <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "8px", marginBottom: "14px" }}>
@@ -279,7 +279,7 @@ def hash_password(password: str) -> str:
                       { tool: "COBALT Z3", rate: "64.8%", sub: "162 / 250", color: "#dc2626" },
                       { tool: "Semgrep (all)", rate: "6.4%", sub: "16 / 250", color: "#6b7280" },
                       { tool: "Bandit", rate: "2.0%", sub: "5 / 250", color: "#6b7280" },
-                      { tool: "COBALT-only", rate: "93.2%", sub: "invisible to all", color: "#d97706" },
+                      { tool: "Z3-proven invisible", rate: "97.8%", sub: "88 / 90 Z3_SAT", color: "#d97706" },
                     ].map(t => (
                       <div key={t.tool} style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${t.color}44`, borderRadius: "8px", padding: "10px 14px" }}>
                         <div style={{ fontSize: "10px", color: "#6b7280", marginBottom: "4px" }}>{t.tool}</div>
@@ -305,7 +305,7 @@ def hash_password(password: str) -> str:
                   </div>
                   <div style={{ padding: "10px 14px", background: "rgba(59,130,246,0.06)", borderRadius: "6px", borderLeft: "3px solid #3b82f6" }}>
                     <span style={{ fontSize: "13px", color: "#93c5fd", fontWeight: 600 }}>Why: </span>
-                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Integer overflow in malloc(n × sizeof(T)) looks syntactically clean. Cppcheck runs 113 of 592 checkers — integer overflow in allocation arithmetic is not among them. Clang SA requires concrete bounds. FlawFinder&apos;s 4 detections are all string-copy risks, not CWE-190/131. Z3 bit-vector arithmetic is the only approach that can prove exploitability.</span>
+                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Integer overflow in malloc(n × sizeof(T)) looks syntactically clean. Cppcheck runs 113/592 checkers — overflow in allocation arithmetic is not among them. Clang SA requires concrete bounds. FlawFinder&apos;s 4 hits: 2 flagged strcat (not overflow), 2 flagged rand() — none detected integer overflow. Z3 bit-vector arithmetic is the only approach that can prove exploitability across the full integer domain.</span>
                   </div>
                 </div>
               </div>
