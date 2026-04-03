@@ -268,28 +268,44 @@ def hash_password(password: str) -> str:
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
-                    &ldquo;Do Semgrep and Bandit catch what COBALT finds?&rdquo;
+                    &ldquo;Do 6 industry tools catch what COBALT finds?&rdquo;
                   </div>
                   <p style={{ color: "#9ca3af", fontSize: "14px", lineHeight: 1.6, margin: "0 0 16px" }}>
-                    We ran all 250 artifacts through <strong style={{ color: "#fff" }}>every available Semgrep ruleset</strong> (p/c, p/python, p/security-audit, auto) plus Bandit at all severity levels. Combined, they detected <strong style={{ color: "#fff" }}>7.6%</strong> of what COBALT found. <strong style={{ color: "#dc2626" }}>93.2% of COBALT findings were completely invisible to all tools combined.</strong>
+                    We ran two tool comparison experiments. First: all Semgrep rulesets + Bandit across all 250 artifacts — detected <strong style={{ color: "#fff" }}>7.6%</strong> of COBALT findings. Then we ran three heavyweight C analyzers (Cppcheck 2.13, Clang Static Analyzer, FlawFinder) against all 87 C artifacts. <strong style={{ color: "#dc2626" }}>Cppcheck and Clang SA both found zero.</strong>
                   </p>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "10px", marginBottom: "16px" }}>
+                  <div style={{ marginBottom: "10px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", color: "#6b7280" }}>PATTERN TOOLS — 250 ARTIFACTS</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "8px", marginBottom: "14px" }}>
                     {[
                       { tool: "COBALT Z3", rate: "64.8%", sub: "162 / 250", color: "#dc2626" },
                       { tool: "Semgrep (all)", rate: "6.4%", sub: "16 / 250", color: "#6b7280" },
                       { tool: "Bandit", rate: "2.0%", sub: "5 / 250", color: "#6b7280" },
-                      { tool: "COBALT-only", rate: "93.2%", sub: "of COBALT findings", color: "#d97706" },
+                      { tool: "COBALT-only", rate: "93.2%", sub: "invisible to all", color: "#d97706" },
                     ].map(t => (
-                      <div key={t.tool} style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${t.color}44`, borderRadius: "8px", padding: "12px 16px" }}>
-                        <div style={{ fontSize: "11px", color: "#6b7280", marginBottom: "4px" }}>{t.tool}</div>
-                        <div style={{ fontSize: "20px", fontWeight: 900, color: t.color }}>{t.rate}</div>
+                      <div key={t.tool} style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${t.color}44`, borderRadius: "8px", padding: "10px 14px" }}>
+                        <div style={{ fontSize: "10px", color: "#6b7280", marginBottom: "4px" }}>{t.tool}</div>
+                        <div style={{ fontSize: "18px", fontWeight: 900, color: t.color }}>{t.rate}</div>
+                        <div style={{ fontSize: "10px", color: "#4b5563", marginTop: "2px" }}>{t.sub}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginBottom: "10px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", color: "#6b7280" }}>HEAVYWEIGHT C ANALYZERS — 87 C ARTIFACTS</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: "8px", marginBottom: "16px" }}>
+                    {[
+                      { tool: "Cppcheck 2.13", rate: "0%", sub: "0 / 87 C", color: "#4b5563" },
+                      { tool: "Clang SA", rate: "0%", sub: "0 / 87 C", color: "#4b5563" },
+                      { tool: "FlawFinder", rate: "4.6%", sub: "4 / 87 C", color: "#6b7280" },
+                      { tool: "COBALT-only", rate: "96.9%", sub: "on C artifacts", color: "#d97706" },
+                    ].map(t => (
+                      <div key={t.tool} style={{ background: "rgba(255,255,255,0.03)", border: `1px solid ${t.color}44`, borderRadius: "8px", padding: "10px 14px" }}>
+                        <div style={{ fontSize: "10px", color: "#6b7280", marginBottom: "4px" }}>{t.tool}</div>
+                        <div style={{ fontSize: "18px", fontWeight: 900, color: t.color }}>{t.rate}</div>
                         <div style={{ fontSize: "10px", color: "#4b5563", marginTop: "2px" }}>{t.sub}</div>
                       </div>
                     ))}
                   </div>
                   <div style={{ padding: "10px 14px", background: "rgba(59,130,246,0.06)", borderRadius: "6px", borderLeft: "3px solid #3b82f6" }}>
                     <span style={{ fontSize: "13px", color: "#93c5fd", fontWeight: 600 }}>Why: </span>
-                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Integer overflow in malloc(n × sizeof(T)) looks syntactically clean. It requires Z3 arithmetic reasoning to prove — rule-based scanners cannot detect it by design. For C memory allocation: Semgrep detected 2 of 80 vulnerabilities (2.5%), both for unrelated string-copy warnings.</span>
+                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Integer overflow in malloc(n × sizeof(T)) looks syntactically clean. Cppcheck runs 113 of 592 checkers — integer overflow in allocation arithmetic is not among them. Clang SA requires concrete bounds. FlawFinder&apos;s 4 detections are all string-copy risks, not CWE-190/131. Z3 bit-vector arithmetic is the only approach that can prove exploitability.</span>
                   </div>
                 </div>
               </div>
