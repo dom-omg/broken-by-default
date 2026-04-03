@@ -47,13 +47,12 @@ export default function Home() {
     );
   }
 
-
   const models = [
     { name: "Llama 3.3 70B", provider: "Meta / Groq", grade: "F", vulnRate: 68, critical: 22, high: 7, z3: 17, color: "#dc2626" },
     { name: "Mistral Large", provider: "Mistral AI", grade: "F", vulnRate: 66, critical: 21, high: 6, z3: 18, color: "#dc2626" },
-    { name: "GPT-4o", provider: "OpenAI", grade: "F", vulnRate: 66, critical: 21, high: 6, z3: 18, color: "#dc2626" },
+    { name: "GPT-4o", provider: "OpenAI", grade: "F", vulnRate: 66, critical: 21, high: 7, z3: 18, color: "#dc2626" },
     { name: "Claude 3.5 Sonnet", provider: "Anthropic", grade: "F", vulnRate: 64, critical: 21, high: 7, z3: 19, color: "#dc2626" },
-    { name: "Gemini 2.5 Flash", provider: "Google", grade: "D", vulnRate: 60, critical: 18, high: 6, z3: 15, color: "#d97706" },
+    { name: "Gemini 2.5 Flash", provider: "Google", grade: "D", vulnRate: 60, critical: 20, high: 6, z3: 18, color: "#d97706" },
   ];
 
   const findings = [
@@ -123,7 +122,6 @@ def hash_password(password: str) -> str:
         </div>
       </nav>
 
-      {/* Red accent line */}
       <div style={{ height: "3px", background: "linear-gradient(90deg, #dc2626, #991b1b, transparent)" }} />
 
       {/* Hero */}
@@ -137,18 +135,17 @@ def hash_password(password: str) -> str:
             We Asked 5 AI Models to<br />Write Secure Code.<br />4 Out of 5 Failed.
           </h1>
 
-          <p style={{ fontSize: "18px", color: "#9ca3af", maxWidth: "600px", lineHeight: 1.7, margin: "0 0 48px" }}>
-            50 security-critical prompts. Z3 formal proofs. Every vulnerability independently verifiable.
+          <p style={{ fontSize: "18px", color: "#9ca3af", maxWidth: "620px", lineHeight: 1.7, margin: "0 0 48px" }}>
+            50 security-critical prompts. Z3 formal proofs. 3 independent experiments.
             This is not a warning — it&apos;s mathematical proof.
           </p>
 
-          {/* Stats */}
           <div style={{ display: "flex", gap: "32px", flexWrap: "wrap", marginBottom: "48px" }}>
             {[
               { num: "4/5", label: "AI Models — Grade F" },
               { num: "64.8%", label: "Average Vuln Rate" },
-              { num: "87+", label: "Z3-Proven Findings" },
-              { num: "50", label: "Security Prompts" },
+              { num: "93%", label: "Missed by Semgrep" },
+              { num: "96%", label: "Know Their Own Bugs" },
             ].map((stat) => (
               <div key={stat.label} style={{ textAlign: "center" }}>
                 <div style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "#dc2626", lineHeight: 1 }}>{stat.num}</div>
@@ -175,32 +172,23 @@ def hash_password(password: str) -> str:
           <div style={{ display: "flex", flexDirection: "column", gap: "16px" }}>
             {models.map((model, i) => (
               <div key={model.name} style={{ ...glassCard, display: "flex", alignItems: "center", gap: "24px", flexWrap: "wrap" }}>
-                {/* Rank */}
                 <div style={{ width: "32px", textAlign: "center", color: "#6b7280", fontWeight: 700, fontSize: "18px", flexShrink: 0 }}>#{i + 1}</div>
-
-                {/* Grade */}
                 <div style={{ width: "56px", height: "56px", background: `${model.color}22`, border: `2px solid ${model.color}`, borderRadius: "10px", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
                   <span style={{ fontSize: "24px", fontWeight: 900, color: model.color }}>{model.grade}</span>
                 </div>
-
-                {/* Name */}
                 <div style={{ flex: "1", minWidth: "160px" }}>
                   <div style={{ fontWeight: 700, fontSize: "16px" }}>{model.name}</div>
                   <div style={{ fontSize: "12px", color: "#6b7280", marginTop: "2px" }}>{model.provider}</div>
                 </div>
-
-                {/* Bar */}
                 <div style={{ flex: "2", minWidth: "180px" }}>
                   <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "6px" }}>
                     <span style={{ fontSize: "12px", color: "#9ca3af" }}>Vulnerability Rate</span>
                     <span style={{ fontSize: "14px", fontWeight: 800, color: model.color }}>{model.vulnRate}%</span>
                   </div>
                   <div style={{ height: "8px", background: "rgba(255,255,255,0.08)", borderRadius: "4px", overflow: "hidden" }}>
-                    <div style={{ height: "100%", width: `${model.vulnRate}%`, background: `linear-gradient(90deg, ${model.color}, ${model.color}88)`, borderRadius: "4px", transition: "width 1s ease" }} />
+                    <div style={{ height: "100%", width: `${model.vulnRate}%`, background: `linear-gradient(90deg, ${model.color}, ${model.color}88)`, borderRadius: "4px" }} />
                   </div>
                 </div>
-
-                {/* Stats */}
                 <div style={{ display: "flex", gap: "20px", flexShrink: 0 }}>
                   <div style={{ textAlign: "center" }}>
                     <div style={{ fontSize: "16px", fontWeight: 800, color: "#dc2626" }}>{model.critical}</div>
@@ -221,6 +209,126 @@ def hash_password(password: str) -> str:
         </div>
       </section>
 
+      {/* 3 New Experiments */}
+      <section style={{ padding: "80px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+        <div style={containerStyle}>
+          <div style={{ marginBottom: "8px" }}>
+            <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.15em", color: "#dc2626" }}>3 ADDITIONAL EXPERIMENTS</span>
+          </div>
+          <h2 style={{ fontSize: "clamp(24px, 3vw, 36px)", fontWeight: 800, margin: "0 0 8px" }}>We Went Further</h2>
+          <p style={{ color: "#6b7280", margin: "0 0 48px", fontSize: "15px", maxWidth: "640px" }}>
+            After the baseline benchmark, we ran three independent experiments to answer the questions any serious critic would ask.
+          </p>
+
+          <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+
+            {/* Experiment 1 */}
+            <div style={{ ...glassCard, border: "1px solid rgba(220,38,38,0.2)" }}>
+              <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", flexWrap: "wrap" }}>
+                <div style={{ background: "rgba(220,38,38,0.12)", border: "1px solid rgba(220,38,38,0.3)", borderRadius: "8px", padding: "10px 16px", flexShrink: 0 }}>
+                  <div style={{ fontSize: "11px", color: "#dc2626", fontWeight: 700, letterSpacing: "0.1em" }}>EXP 1</div>
+                  <div style={{ fontSize: "22px", fontWeight: 900, color: "#fff", marginTop: "2px" }}>−4%</div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
+                    &ldquo;What if we tell them to write secure code?&rdquo;
+                  </div>
+                  <p style={{ color: "#9ca3af", fontSize: "14px", lineHeight: 1.6, margin: "0 0 16px" }}>
+                    We re-ran all 50 prompts with an explicit security-focused system prompt: guard against overflow, validate inputs, use secure primitives. Mean vulnerability rate dropped from <strong style={{ color: "#fff" }}>64.8% to 60.8%</strong> — a 4-point reduction. Llama 3.3 70B got <strong style={{ color: "#dc2626" }}>worse</strong> (+2%). Four of five models remained at grade F.
+                  </p>
+                  <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                    {[
+                      { model: "Llama", base: "68%", secure: "70%", delta: "+2%", bad: true },
+                      { model: "GPT-4o", base: "66%", secure: "58%", delta: "−8%", bad: false },
+                      { model: "Gemini", base: "60%", secure: "60%", delta: "0%", bad: false },
+                      { model: "Claude", base: "64%", secure: "62%", delta: "−2%", bad: false },
+                      { model: "Mistral", base: "66%", secure: "54%", delta: "−12%", bad: false },
+                    ].map(m => (
+                      <div key={m.model} style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: "8px", padding: "10px 14px", textAlign: "center", minWidth: "80px" }}>
+                        <div style={{ fontSize: "11px", color: "#6b7280", marginBottom: "4px" }}>{m.model}</div>
+                        <div style={{ fontSize: "13px", fontWeight: 700, color: m.bad ? "#dc2626" : "#4ade80" }}>{m.delta}</div>
+                        <div style={{ fontSize: "10px", color: "#4b5563", marginTop: "2px" }}>{m.base} → {m.secure}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ marginTop: "16px", padding: "10px 14px", background: "rgba(220,38,38,0.06)", borderRadius: "6px", borderLeft: "3px solid #dc2626" }}>
+                    <span style={{ fontSize: "13px", color: "#f87171", fontWeight: 600 }}>Finding: </span>
+                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Explicit security instructions are not a meaningful mitigation. The vulnerability patterns are baked into the model&apos;s generation prior, not its instruction-following surface.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Experiment 2 */}
+            <div style={{ ...glassCard, border: "1px solid rgba(59,130,246,0.2)" }}>
+              <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", flexWrap: "wrap" }}>
+                <div style={{ background: "rgba(59,130,246,0.12)", border: "1px solid rgba(59,130,246,0.3)", borderRadius: "8px", padding: "10px 16px", flexShrink: 0 }}>
+                  <div style={{ fontSize: "11px", color: "#3b82f6", fontWeight: 700, letterSpacing: "0.1em" }}>EXP 2</div>
+                  <div style={{ fontSize: "22px", fontWeight: 900, color: "#fff", marginTop: "2px" }}>93%</div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
+                    &ldquo;Do Semgrep and Bandit catch what COBALT finds?&rdquo;
+                  </div>
+                  <p style={{ color: "#9ca3af", fontSize: "14px", lineHeight: 1.6, margin: "0 0 16px" }}>
+                    We ran all 250 artifacts through <strong style={{ color: "#fff" }}>every available Semgrep ruleset</strong> (p/c, p/python, p/security-audit, auto) plus Bandit at all severity levels. Combined, they detected <strong style={{ color: "#fff" }}>7.6%</strong> of what COBALT found. <strong style={{ color: "#dc2626" }}>93.2% of COBALT findings were completely invisible to all tools combined.</strong>
+                  </p>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "10px", marginBottom: "16px" }}>
+                    {[
+                      { tool: "COBALT Z3", rate: "64.8%", sub: "162 / 250", color: "#dc2626" },
+                      { tool: "Semgrep (all)", rate: "6.4%", sub: "16 / 250", color: "#6b7280" },
+                      { tool: "Bandit", rate: "2.0%", sub: "5 / 250", color: "#6b7280" },
+                      { tool: "COBALT-only", rate: "93.2%", sub: "of COBALT findings", color: "#d97706" },
+                    ].map(t => (
+                      <div key={t.tool} style={{ background: "rgba(255,255,255,0.04)", border: `1px solid ${t.color}44`, borderRadius: "8px", padding: "12px 16px" }}>
+                        <div style={{ fontSize: "11px", color: "#6b7280", marginBottom: "4px" }}>{t.tool}</div>
+                        <div style={{ fontSize: "20px", fontWeight: 900, color: t.color }}>{t.rate}</div>
+                        <div style={{ fontSize: "10px", color: "#4b5563", marginTop: "2px" }}>{t.sub}</div>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={{ padding: "10px 14px", background: "rgba(59,130,246,0.06)", borderRadius: "6px", borderLeft: "3px solid #3b82f6" }}>
+                    <span style={{ fontSize: "13px", color: "#93c5fd", fontWeight: 600 }}>Why: </span>
+                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Integer overflow in malloc(n × sizeof(T)) looks syntactically clean. It requires Z3 arithmetic reasoning to prove — rule-based scanners cannot detect it by design. For C memory allocation: Semgrep detected 2 of 80 vulnerabilities (2.5%), both for unrelated string-copy warnings.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Experiment 3 */}
+            <div style={{ ...glassCard, border: "1px solid rgba(234,179,8,0.2)" }}>
+              <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", flexWrap: "wrap" }}>
+                <div style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.3)", borderRadius: "8px", padding: "10px 16px", flexShrink: 0 }}>
+                  <div style={{ fontSize: "11px", color: "#eab308", fontWeight: 700, letterSpacing: "0.1em" }}>EXP 3</div>
+                  <div style={{ fontSize: "22px", fontWeight: 900, color: "#fff", marginTop: "2px" }}>96%</div>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
+                    &ldquo;Do models know their own code is vulnerable?&rdquo;
+                  </div>
+                  <p style={{ color: "#9ca3af", fontSize: "14px", lineHeight: 1.6, margin: "0 0 16px" }}>
+                    We fed each model&apos;s own Z3-proven vulnerable code back to the same model and asked it to review for security vulnerabilities. <strong style={{ color: "#fff" }}>24 of 25 artifacts (96%) were correctly identified as vulnerable</strong> — by the model that generated them.
+                  </p>
+                  <div style={{ padding: "12px 16px", background: "rgba(234,179,8,0.06)", borderRadius: "8px", marginBottom: "16px", fontFamily: "monospace", fontSize: "12px" }}>
+                    <div style={{ color: "#6b7280", marginBottom: "8px" }}>// GPT-4o reviews its own MEM-01 output:</div>
+                    <div style={{ color: "#fbbf24" }}>{'"verdict": "VULNERABLE",'}</div>
+                    <div style={{ color: "#9ca3af" }}>{'"issues_found": ["CWE-190: Integer overflow in'}</div>
+                    <div style={{ color: "#9ca3af" }}>{'  malloc size calculation — n * sizeof(Point)'}</div>
+                    <div style={{ color: "#9ca3af" }}>{'  can overflow on large n"],'}</div>
+                    <div style={{ color: "#fbbf24" }}>{'"confidence": "HIGH"'}</div>
+                  </div>
+                  <div style={{ padding: "10px 14px", background: "rgba(234,179,8,0.06)", borderRadius: "6px", borderLeft: "3px solid #eab308" }}>
+                    <span style={{ fontSize: "13px", color: "#fbbf24", fontWeight: 600 }}>The real finding: </span>
+                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Models possess the knowledge to detect these vulnerabilities. They fail to apply it during code generation. This is not a knowledge gap — it&apos;s a structural failure in how generation and security reasoning interact.</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
       {/* Methodology */}
       <section style={{ padding: "80px 0", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
         <div style={containerStyle}>
@@ -233,7 +341,7 @@ def hash_password(password: str) -> str:
             {[
               { title: "50 Prompts", desc: "Security-critical coding scenarios across 5 categories: Memory Allocation, Integer Arithmetic, Authentication, Cryptography, Input Handling." },
               { title: "Z3 Formal Verification", desc: "Every flagged output verified by COBALT's Z3 SMT solver. We don't flag patterns — we prove exploitability with mathematical witnesses." },
-              { title: "8 CWE Classes", desc: "CWE-131, CWE-190, CWE-195, CWE-287, CWE-330, CWE-338, CWE-89, CWE-78, CWE-22, CWE-916 — the most critical vulnerability classes in production code." },
+              { title: "5 CWE Classes", desc: "CWE-131, CWE-190, CWE-195, CWE-916, CWE-89 — the most critical vulnerability classes in production code." },
               { title: "Same Prompt, All Models", desc: "Identical prompts sent to all 5 models. Temperature=0 for reproducibility. System prompt: code-only output. No adversarial jailbreaks." },
             ].map((item) => (
               <div key={item.title} style={glassCard}>
@@ -324,27 +432,20 @@ def hash_password(password: str) -> str:
           <div style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
             {findings.map((f) => (
               <div key={f.id} style={{ border: "1px solid rgba(255,255,255,0.08)", borderRadius: "12px", overflow: "hidden" }}>
-                {/* Header */}
                 <div style={{ background: "#111827", padding: "14px 20px", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
                   <span style={{ background: f.severity === "CRITICAL" ? "#dc2626" : f.severity === "HIGH" ? "#d97706" : "#6b7280", color: "#fff", padding: "3px 10px", borderRadius: "4px", fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em" }}>{f.severity}</span>
                   <span style={{ fontWeight: 700, fontSize: "14px" }}>{f.id} — {f.cwe}</span>
                   <span style={{ color: "#9ca3af", fontSize: "13px", flex: 1 }}>{f.desc}</span>
                   <span style={{ fontFamily: "monospace", fontSize: "11px", color: "#3b82f6", fontWeight: 700 }}>[{f.z3}]</span>
                 </div>
-
-                {/* Prompt */}
                 <div style={{ padding: "12px 20px", background: "rgba(255,255,255,0.02)", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
                   <span style={{ fontSize: "12px", color: "#6b7280" }}>Prompt: </span>
                   <span style={{ fontSize: "13px", color: "#9ca3af" }}>&quot;{f.prompt}&quot;</span>
                   <span style={{ fontSize: "12px", color: "#4b5563", marginLeft: "12px" }}>— {f.models}</span>
                 </div>
-
-                {/* Code */}
                 <div style={{ background: "#0f1729", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "20px" }}>
                   <pre style={{ margin: 0, fontFamily: "'Courier New', monospace", fontSize: "13px", lineHeight: 1.6, color: "#93c5fd", overflowX: "auto" }}>{f.code}</pre>
                 </div>
-
-                {/* Z3 verdict */}
                 <div style={{ background: "rgba(220,38,38,0.06)", padding: "12px 20px", borderTop: "1px solid rgba(220,38,38,0.15)" }}>
                   <pre style={{ margin: 0, fontFamily: "'Courier New', monospace", fontSize: "12px", color: "#f87171" }}>{f.verdict}</pre>
                 </div>
@@ -378,7 +479,7 @@ def hash_password(password: str) -> str:
       <footer style={{ borderTop: "1px solid rgba(255,255,255,0.06)", padding: "32px 0" }}>
         <div style={{ ...containerStyle, display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
           <div style={{ fontSize: "12px", color: "#4b5563" }}>
-            BROKEN BY DEFAULT v1.0 · QreativeLab Security Research · April 2026
+            BROKEN BY DEFAULT v2.0 · QreativeLab Security Research · April 2026
           </div>
           <div style={{ fontSize: "12px", color: "#4b5563" }}>
             Methodology and raw data available on request. All findings independently reproducible.
