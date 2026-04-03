@@ -145,7 +145,7 @@ def hash_password(password: str) -> str:
               { num: "4/5", label: "AI Models — Grade F" },
               { num: "64.8%", label: "Average Vuln Rate" },
               { num: "97.8%", label: "Z3-Proven — Invisible to All Tools" },
-              { num: "96%", label: "Know Their Own Bugs" },
+              { num: "78.7%", label: "Identify Their Own Bugs (Review)" },
             ].map((stat) => (
               <div key={stat.label} style={{ textAlign: "center" }}>
                 <div style={{ fontSize: "clamp(28px, 4vw, 42px)", fontWeight: 900, color: "#dc2626", lineHeight: 1 }}>{stat.num}</div>
@@ -316,26 +316,33 @@ def hash_password(password: str) -> str:
               <div style={{ display: "flex", gap: "16px", alignItems: "flex-start", flexWrap: "wrap" }}>
                 <div style={{ background: "rgba(234,179,8,0.12)", border: "1px solid rgba(234,179,8,0.3)", borderRadius: "8px", padding: "10px 16px", flexShrink: 0 }}>
                   <div style={{ fontSize: "11px", color: "#eab308", fontWeight: 700, letterSpacing: "0.1em" }}>EXP 3</div>
-                  <div style={{ fontSize: "22px", fontWeight: 900, color: "#fff", marginTop: "2px" }}>96%</div>
+                  <div style={{ fontSize: "22px", fontWeight: 900, color: "#fff", marginTop: "2px" }}>78.7%</div>
                 </div>
                 <div style={{ flex: 1 }}>
                   <div style={{ fontWeight: 800, fontSize: "17px", marginBottom: "8px" }}>
                     &ldquo;Do models know their own code is vulnerable?&rdquo;
                   </div>
                   <p style={{ color: "#9ca3af", fontSize: "14px", lineHeight: 1.6, margin: "0 0 16px" }}>
-                    We fed each model&apos;s own Z3-proven vulnerable code back to the same model and asked it to review for security vulnerabilities. <strong style={{ color: "#fff" }}>24 of 25 artifacts (96%) were correctly identified as vulnerable</strong> — by the model that generated them.
+                    We fed all 89 valid Z3-proven vulnerable artifacts back to the generating model and asked it to review for security vulnerabilities. <strong style={{ color: "#fff" }}>70 of 89 (78.7%) were correctly identified</strong> — by the model that generated them. False-negative rate: <strong style={{ color: "#ef4444" }}>21.3%</strong>.
                   </p>
-                  <div style={{ padding: "12px 16px", background: "rgba(234,179,8,0.06)", borderRadius: "8px", marginBottom: "16px", fontFamily: "monospace", fontSize: "12px" }}>
-                    <div style={{ color: "#6b7280", marginBottom: "8px" }}>// GPT-4o reviews its own MEM-01 output:</div>
-                    <div style={{ color: "#fbbf24" }}>{'"verdict": "VULNERABLE",'}</div>
-                    <div style={{ color: "#9ca3af" }}>{'"issues_found": ["CWE-190: Integer overflow in'}</div>
-                    <div style={{ color: "#9ca3af" }}>{'  malloc size calculation — n * sizeof(Point)'}</div>
-                    <div style={{ color: "#9ca3af" }}>{'  can overflow on large n"],'}</div>
-                    <div style={{ color: "#fbbf24" }}>{'"confidence": "HIGH"'}</div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: "8px", marginBottom: "16px" }}>
+                    {[
+                      { model: "Mistral", rate: "100%", n: "17/17", color: "#22c55e" },
+                      { model: "Llama", rate: "82%", n: "14/17", color: "#84cc16" },
+                      { model: "Gemini", rate: "78%", n: "14/18", color: "#eab308" },
+                      { model: "Claude", rate: "68%", n: "13/19", color: "#f97316" },
+                      { model: "GPT-4o", rate: "67%", n: "12/18", color: "#ef4444" },
+                    ].map(m => (
+                      <div key={m.model} style={{ textAlign: "center", background: "rgba(255,255,255,0.03)", borderRadius: "6px", padding: "8px 4px" }}>
+                        <div style={{ fontSize: "10px", color: "#6b7280", marginBottom: "4px" }}>{m.model}</div>
+                        <div style={{ fontSize: "15px", fontWeight: 800, color: m.color }}>{m.rate}</div>
+                        <div style={{ fontSize: "10px", color: "#4b5563" }}>{m.n}</div>
+                      </div>
+                    ))}
                   </div>
                   <div style={{ padding: "10px 14px", background: "rgba(234,179,8,0.06)", borderRadius: "6px", borderLeft: "3px solid #eab308" }}>
                     <span style={{ fontSize: "13px", color: "#fbbf24", fontWeight: 600 }}>The real finding: </span>
-                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Models possess the knowledge to detect these vulnerabilities. They fail to apply it during code generation. This is not a knowledge gap — it&apos;s a structural failure in how generation and security reasoning interact.</span>
+                    <span style={{ fontSize: "13px", color: "#9ca3af" }}>Models identify their own bugs at 78.7% in review mode — yet generate them 64.8% of the time. This is not a knowledge gap — it&apos;s a structural failure where security knowledge does not transfer from review to generation.</span>
                   </div>
                 </div>
               </div>
