@@ -1,4 +1,53 @@
+"use client";
+import { useState } from "react";
+
 export default function Home() {
+  const [unlocked, setUnlocked] = useState(false);
+  const [code, setCode] = useState("");
+  const [shake, setShake] = useState(false);
+
+  function handleUnlock() {
+    if (code === "4874") {
+      setUnlocked(true);
+    } else {
+      setShake(true);
+      setCode("");
+      setTimeout(() => setShake(false), 500);
+    }
+  }
+
+  if (!unlocked) {
+    return (
+      <div style={{ minHeight: "100vh", background: "#050508", display: "flex", alignItems: "center", justifyContent: "center", flexDirection: "column", gap: "0" }}>
+        <div style={{ marginBottom: "32px", textAlign: "center" }}>
+          <div style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.2em", color: "#dc2626", marginBottom: "12px" }}>BROKEN BY DEFAULT</div>
+          <div style={{ fontSize: "13px", color: "#4b5563", letterSpacing: "0.05em" }}>RESTRICTED ACCESS</div>
+        </div>
+        <div style={{ animation: shake ? "shake 0.4s ease" : "none" }}>
+          <style>{`@keyframes shake { 0%,100%{transform:translateX(0)} 20%,60%{transform:translateX(-8px)} 40%,80%{transform:translateX(8px)} }`}</style>
+          <input
+            type="password"
+            value={code}
+            onChange={e => setCode(e.target.value)}
+            onKeyDown={e => e.key === "Enter" && handleUnlock()}
+            placeholder="Access code"
+            maxLength={10}
+            autoFocus
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "8px", color: "#fff", fontSize: "20px", padding: "14px 24px", width: "240px", textAlign: "center", outline: "none", letterSpacing: "0.3em", display: "block" }}
+          />
+        </div>
+        <button
+          onClick={handleUnlock}
+          style={{ marginTop: "16px", background: "#dc2626", color: "#fff", border: "none", borderRadius: "8px", padding: "12px 36px", fontWeight: 700, fontSize: "13px", cursor: "pointer", letterSpacing: "0.08em" }}
+        >
+          ENTER
+        </button>
+        <div style={{ marginTop: "48px", fontSize: "11px", color: "#1f2937" }}>powered by QreativeLab</div>
+      </div>
+    );
+  }
+
+
   const models = [
     { name: "Llama 3.3 70B", provider: "Meta / Groq", grade: "F", vulnRate: 68, critical: 22, high: 7, z3: 17, color: "#dc2626" },
     { name: "Mistral Large", provider: "Mistral AI", grade: "F", vulnRate: 66, critical: 21, high: 6, z3: 18, color: "#dc2626" },
