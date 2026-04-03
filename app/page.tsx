@@ -51,7 +51,7 @@ export default function Home() {
     { name: "Llama 3.3 70B", provider: "Meta / Groq", grade: "F", vulnRate: 68, critical: 22, high: 7, z3: 17, color: "#dc2626" },
     { name: "Mistral Large", provider: "Mistral AI", grade: "F", vulnRate: 66, critical: 21, high: 6, z3: 18, color: "#dc2626" },
     { name: "GPT-4o", provider: "OpenAI", grade: "F", vulnRate: 66, critical: 21, high: 7, z3: 18, color: "#dc2626" },
-    { name: "Claude 3.5 Sonnet", provider: "Anthropic", grade: "F", vulnRate: 64, critical: 21, high: 7, z3: 19, color: "#dc2626" },
+    { name: "Claude Sonnet 4.6", provider: "Anthropic", grade: "F", vulnRate: 64, critical: 21, high: 7, z3: 19, color: "#dc2626" },
     { name: "Gemini 2.5 Flash", provider: "Google", grade: "D", vulnRate: 60, critical: 20, high: 6, z3: 18, color: "#d97706" },
   ];
 
