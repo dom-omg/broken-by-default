@@ -326,6 +326,9 @@ Gemini 2.5 Flash & 22.5\% & 37 & 8  & 44 & B \\
 Mean & 48.8\% & 60.4 & 29.8 & 58.8 & --- \\
 \bottomrule
 \end{tabular}
+
+\smallskip
+{\normalfont\footnotesize Grades: A $<$10\%, B 10--29\%, C 30--44\%, D 45--59\%, F $\geq$60\% vulnerability rate.}
 \end{table}
 
 The mean vulnerability rate of 48.8\% is alarmingly high. GPT-4o led
@@ -387,25 +390,27 @@ results.
 
 \begin{table}[h]
 \centering
+\footnotesize
 \caption{PoC Exploit Confirmation Results}
 \label{tab:poc}
-\begin{tabular}{llll}
+\begin{tabular}{@{}llll@{}}
 \toprule
 \textbf{ID} & \textbf{Model} & \textbf{Fault Type} & \textbf{Result} \\
 \midrule
-MEM-01-A & Llama   & heap-buf-overflow    & CONFIRMED \\
-MEM-01-B & GPT-4o  & heap-buf-overflow    & CONFIRMED \\
-MEM-03   & Llama   & alloc-size-too-big   & CONFIRMED \\
-MEM-06   & GPT-4o  & OOB read             & CONFIRMED \\
-AUTH-03  & Llama   & SHA-256 crack        & CONFIRMED \\
-INP-01   & Mistral & SQL injection        & CONFIRMED \\
-INP-06   & GPT-4o  & Zip Slip (path trav.)& BLOCKED* \\
+MEM-01-A & Llama   & heap-buf-overflow    & \checkmark \\
+MEM-01-B & GPT-4o  & heap-buf-overflow    & \checkmark \\
+MEM-03   & Llama   & alloc-size-too-big   & \checkmark \\
+MEM-06   & GPT-4o  & OOB read             & \checkmark \\
+AUTH-03  & Llama   & SHA-256 crack        & \checkmark \\
+INP-01   & Mistral & SQL injection        & \checkmark \\
+INP-06   & GPT-4o  & Zip Slip (path trav.)& blocked$^\dagger$ \\
 \bottomrule
 \end{tabular}
-\end{table}
 
-{\footnotesize * Python 3.12 raises \texttt{ValueError} on path traversal. Vulnerable
-pattern present; blocked at runtime, not at generation.}
+\smallskip
+{\normalfont\footnotesize $\dagger$ Python 3.12 raises \texttt{ValueError} on path traversal.
+Vulnerable pattern present; blocked at runtime, not at generation.}
+\end{table}
 
 \vspace{0.5em}
 
@@ -436,23 +441,27 @@ database, confirming complete data exfiltration.
 We re-ran all 50 prompts of the v1 corpus for all five models with a
 security-explicit system prompt instructing models to apply security best
 practices, guard against integer overflow, and produce production-ready
-code. Table~\ref{tab:ablation} shows the results. (Ablation on the full
-200-prompt corpus is left for future work.)
+code. Note: the v1 corpus was collected with Claude 3.5 Sonnet; the v2
+leaderboard uses Claude Haiku 4.5, so per-model rates are not directly
+comparable across tables. Table~\ref{tab:ablation} shows the results.
+(Ablation on the full 200-prompt corpus is left for future work.)
 
 \begin{table}[h]
 \centering
-\caption{Baseline vs.\ Secure Prompt Ablation}
+\caption{Baseline vs.\ Secure Prompt Ablation (v1 corpus, 50 prompts).
+  $^\dagger$Claude row reflects v1 data collected with Claude 3.5 Sonnet;
+  the v2 leaderboard uses Claude Haiku 4.5.}
 \label{tab:ablation}
 \begin{tabular}{lrrrl}
 \toprule
 \textbf{Model} & \textbf{Base} & \textbf{Secure} & \textbf{$\Delta$} &
 \textbf{Grade} \\
 \midrule
-Llama 3.3 70B     & 68\% & 70\% & +2\%  & F \\
-GPT-4o            & 66\% & 58\% & $-$8\%  & F \\
-Gemini 2.5 Flash  & 60\% & 60\% & 0\%   & F \\
-Claude Haiku 4.5  & 64\% & 62\% & $-$2\%  & F \\
-Mistral Large     & 66\% & 54\% & $-$12\% & D \\
+Llama 3.3 70B          & 68\% & 70\% & +2\%    & F \\
+GPT-4o                 & 66\% & 58\% & $-$8\%  & F \\
+Gemini 2.5 Flash       & 60\% & 60\% & 0\%     & F \\
+Claude 3.5 Sonnet$^\dagger$ & 64\% & 62\% & $-$2\% & F \\
+Mistral Large          & 66\% & 54\% & $-$12\% & D \\
 \midrule
 Mean & 64.8\% & 60.8\% & $-$4\% & --- \\
 \bottomrule
@@ -578,12 +587,15 @@ model. Table~\ref{tab:selfreview} presents per-model results.
 Mistral Large    & 17/17 & 100\% & 0\%   \\
 Llama 3.3 70B    & 14/17 & 82\%  & 18\%  \\
 Gemini 2.5 Flash & 14/18 & 78\%  & 22\%  \\
-Claude Haiku 4.5  & 13/19 & 68\% & 32\%  \\
+Claude 3.5 Sonnet$^\dagger$ & 13/19 & 68\% & 32\% \\
 GPT-4o           & 12/18 & 67\%  & 33\%  \\
 \midrule
 Total & 70/89 & 78.7\% & 21.3\% \\
 \bottomrule
 \end{tabular}
+
+\smallskip
+{\normalfont\footnotesize $\dagger$ Self-review conducted with the same model used for v1 generation: Claude 3.5 Sonnet (\texttt{claude-3-5-sonnet-20241022}). The v2 leaderboard uses Claude Haiku 4.5.}
 \end{table}
 
 This finding is more damning than a simple false-negative result. It
@@ -664,7 +676,12 @@ secure prompt ablation showed a 2-point increase for one model (Llama)
 on the v1 50-prompt corpus, which may be within noise. We did not test
 multi-turn interactions or retrieval-augmented generation contexts.
 Ablation experiments on the full 200-prompt corpus are left for future
-work.
+work. The public dataset (\url{https://github.com/dom-omg/bbd-dataset})
+contains 826 of 1,000 artifacts; 174 artifacts (Mistral: 36, Gemini:
+138) were not persisted due to API errors during the collection run.
+All 1,000 responses were analyzed in-process and results are fully
+reflected in Table~\ref{tab:leaderboard}; only the raw code artifacts
+are missing from the public release.
 
 \subsection{Ethical Considerations}
 
