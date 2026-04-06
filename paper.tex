@@ -42,14 +42,14 @@
 
 \title{\textbf{Broken by Default: A Formal Verification Study\\
 of Security Vulnerabilities in AI-Generated Code}\\[6pt]
-\large Empirical Analysis of 1,000 Code Artifacts Across Five Large Language Models\\
+\large Empirical Analysis of 3,500 Code Artifacts Across Seven Large Language Models\\
 Using Z3 SMT Solver, Ablation Studies, and Static Tool Comparison}
 
 \author{Dominik Blain, \textit{Founder} \and Maxime Noiseux, \textit{Co-Founder}\\
 \small Cobalt AI\\
 \small Gatineau, QC, Canada\\
 \small \texttt{dominik@qreativelab.io}}
-\date{April 4, 2026}
+\date{April 5, 2026}
 
 \maketitle
 
@@ -57,27 +57,27 @@ Using Z3 SMT Solver, Ablation Studies, and Static Tool Comparison}
 AI coding assistants are now used to generate production code in
 security-sensitive domains, yet the exploitability of their outputs
 remains unquantified. We address this gap with \textit{Broken by
-Default}: a formal verification study of 1,000 code artifacts generated
-by five frontier LLMs across 200 security-critical prompts (five CWE
-categories, 40 prompts each). Each artifact is subjected to the Z3 SMT
+Default}: a formal verification study of 3,500 code artifacts generated
+by seven frontier LLMs across 500 security-critical prompts (five CWE
+categories, 100 prompts each). Each artifact is subjected to the Z3 SMT
 solver via the COBALT analysis pipeline, producing mathematical
 satisfiability witnesses rather than pattern-based heuristics.
 
-Across all models, \textbf{48.8\%} of artifacts contain at least one
-formally proven vulnerability (294 Z3 SAT findings). GPT-4o leads at
-60.5\% (grade F); Gemini 2.5 Flash performs best at 22.5\% (grade B).
-Six of seven representative findings are confirmed with runtime crashes
-under GCC AddressSanitizer. Three auxiliary experiments on a 50-prompt
-sub-corpus show: (1) explicit security instructions reduce the mean
-rate by only 4 points to 60.8\%, leaving four of five models at grade
-F; (2) six industry tools combined flag 7.6\% of artifacts and miss
-97.8\% of Z3-proven findings---a structural gap, not a configuration
-issue; and (3) models identify their own vulnerable outputs 78.7\% of
-the time in review mode yet generate them at 48.8\% by default,
-revealing a persistent generation--review asymmetry. Formal SMT
-verification is the only methodology that can establish ground-truth
-exploitability of the vulnerability patterns that dominate AI-generated
-code.
+Across all models, \textbf{55.8\%} of artifacts contain at least one
+formally proven vulnerability (1,055 Z3 SAT findings). GPT-4o leads at
+62.4\% (grade F); Gemini 2.5 Flash performs best at 48.4\% (grade D).
+No model achieves a grade better than D. Six of seven representative
+findings are confirmed with runtime crashes under GCC AddressSanitizer.
+Three auxiliary experiments on a 50-prompt sub-corpus show: (1) explicit
+security instructions reduce the mean rate by only 4 points to 60.8\%,
+leaving four of five models at grade F; (2) six industry tools combined
+flag 7.6\% of artifacts and miss 97.8\% of Z3-proven findings---a
+structural gap, not a configuration issue; and (3) models identify their
+own vulnerable outputs 78.7\% of the time in review mode yet generate
+them at 55.8\% by default, revealing a persistent generation--review
+asymmetry. Formal SMT verification is the only methodology that can
+establish ground-truth exploitability of the vulnerability patterns that
+dominate AI-generated code.
 \end{abstract}
 
 \section{Introduction}
@@ -103,21 +103,22 @@ with a concrete input that triggers the fault condition. We further
 validate selected findings with compiler-instrumented runtime crashes
 using GCC AddressSanitizer.
 
-Our findings (200-prompt v2 corpus) reveal a mean vulnerability rate of
-48.8\% across all models. GPT-4o leads at 60.5\% (grade F); Gemini 2.5
-Flash performs best at 22.5\% (grade B). A total of 294 findings were
-formally proven exploitable via Z3 satisfiability witnesses, and 6 of 7
-selected vulnerabilities were confirmed with real memory corruption
-crashes using GCC AddressSanitizer (ASAN). We further conduct three
-additional experiments on the v1 50-prompt corpus: (1) a secure prompt
-ablation showing that explicit security instructions reduce the mean
-vulnerability rate by only 4 percentage points (to 60.8\%), leaving four
-of five models at grade F; (2) a static tool comparison showing that six
-industry tools combined flag only 7.6\% of artifacts, missing 97.8\% of
-formally Z3-proven vulnerabilities; and (3) a generation--review
-asymmetry experiment showing that models identify their own Z3-proven
+Our findings (500-prompt v3 corpus, seven models) reveal a mean
+vulnerability rate of 55.8\% across all models. GPT-4o leads at 62.4\%
+(grade F); Gemini 2.5 Flash performs best at 48.4\% (grade D)---no
+model achieves grade C or better. A total of 1,055 findings were formally
+proven exploitable via Z3 satisfiability witnesses, and 6 of 7 selected
+vulnerabilities were confirmed with real memory corruption crashes using
+GCC AddressSanitizer (ASAN). We further conduct three additional
+experiments on the v1 50-prompt corpus: (1) a secure prompt ablation
+showing that explicit security instructions reduce the mean vulnerability
+rate by only 4 percentage points (to 60.8\%), leaving four of five
+models at grade F; (2) a static tool comparison showing that six industry
+tools combined flag only 7.6\% of artifacts, missing 97.8\% of formally
+Z3-proven vulnerabilities; and (3) a generation--review asymmetry
+experiment showing that models identify their own Z3-proven
 vulnerabilities 78.7\% of the time in review mode (70/89)---yet generate
-them at 48.8\% by default. Our results suggest that current LLMs produce
+them at 55.8\% by default. Our results suggest that current LLMs produce
 security-deficient code by default, that security instructions are
 insufficient mitigations, and that formal verification is the only
 approach capable of establishing ground-truth exploitability at scale.
@@ -141,7 +142,7 @@ approach capable of establishing ground-truth exploitability at scale.
 
 \subsection{Scope and Limitations}
 
-This study targets a bounded set of 200 prompt templates (40 per CWE
+This study targets a bounded set of 500 prompt templates (100 per CWE
 category), each designed to elicit code in a security-sensitive domain. Results reflect model
 behavior on this prompt corpus as of April 2026 and should not be
 extrapolated to all possible LLM usage patterns. Models were queried via
@@ -187,7 +188,7 @@ exists; ours measures baseline generation without steering intervention.
 
 Our work differs in four key dimensions: (1) we apply formal Z3 SMT
 verification rather than pattern matching---producing mathematical proof
-of exploitability with concrete witness values; (2) we evaluate five
+of exploitability with concrete witness values; (2) we evaluate seven
 current frontier models simultaneously across identical prompts; (3) we
 provide runtime exploitability confirmation via ASAN; and (4) we
 quantify the detection gap against six industry tools, including
@@ -199,8 +200,8 @@ tooling.
 
 \subsection{Benchmark Design}
 
-We constructed a benchmark of 200 natural-language prompts distributed
-across five CWE categories (40 prompts each):
+We constructed a benchmark of 500 natural-language prompts distributed
+across five CWE categories (100 prompts each):
 
 \begin{itemize}
   \item \textbf{MEM} (CWE-131/190): Buffer allocation, array indexing,
@@ -225,8 +226,8 @@ and returns them as a dynamically allocated array.''}
 
 \subsection{Model Selection and API Configuration}
 
-Five models were evaluated, selected to represent the frontier of
-publicly accessible LLMs as of Q1 2026:
+Seven models were evaluated, selected to represent the frontier of
+publicly accessible LLMs as of Q1--Q2 2026:
 
 \begin{table}[h]
 \centering
@@ -234,11 +235,13 @@ publicly accessible LLMs as of Q1 2026:
 \toprule
 \textbf{Model} & \textbf{API Identifier} \\
 \midrule
-GPT-4o & \texttt{gpt-4o} \\
+GPT-4o          & \texttt{gpt-4o} \\
+GPT-4.1         & \texttt{gpt-4.1} \\
 Claude Haiku 4.5 & \texttt{claude-haiku-4-5-20251001} \\
 Gemini 2.5 Flash & \texttt{gemini-2.5-flash} \\
-Mistral Large & \texttt{mistral-large-latest} \\
-Llama 3.3 70B & \texttt{llama-3.3-70b-versatile} \\
+Mistral Large   & \texttt{mistral-large-latest} \\
+Llama 3.3 70B   & \texttt{llama-3.3-70b-versatile} \\
+Llama 4 Scout   & \texttt{llama-4-scout-17b-16e-instruct} \\
 \bottomrule
 \end{tabular}
 \end{table}
@@ -298,25 +301,27 @@ ASAN output to confirm runtime faults.
 
 \subsection{RQ1: Overall Vulnerability Rates}
 
-Table~\ref{tab:leaderboard} presents aggregate results across all 200
+Table~\ref{tab:leaderboard} presents aggregate results across all 500
 prompts per model.
 
 \begin{table}[h]
 \centering
-\caption{Benchmark Leaderboard --- 200 Prompts per Model}
+\caption{Benchmark Leaderboard --- 500 Prompts per Model, 7 Models}
 \label{tab:leaderboard}
 \begin{tabular}{lrrrrr}
 \toprule
 \textbf{Model} & \textbf{Vuln} & \textbf{CRIT} & \textbf{HIGH} &
 \textbf{Z3} & \textbf{Grd} \\
 \midrule
-GPT-4o           & 60.5\% & 69 & 41 & 65 & F \\
-Llama 3.3 70B    & 59.0\% & 74 & 33 & 61 & D \\
-Claude Haiku 4.5 & 54.5\% & 69 & 35 & 61 & D \\
-Mistral Large    & 47.5\% & 53 & 32 & 63 & D \\
-Gemini 2.5 Flash & 22.5\% & 37 & 8  & 44 & B \\
+GPT-4o           & 62.4\% & 166 & 106 & 167 & F \\
+Llama 4 Scout    & 60.6\% & 167 & 95  & 156 & F \\
+Llama 3.3 70B    & 58.4\% & 168 & 83  & 147 & D \\
+Mistral Large    & 57.8\% & 155 & 94  & 155 & D \\
+GPT-4.1          & 54.0\% & 142 & 86  & 136 & D \\
+Claude Haiku 4.5 & 49.2\% & 155 & 81  & 152 & D \\
+Gemini 2.5 Flash & 48.4\% & 146 & 86  & 142 & D \\
 \midrule
-Mean & 48.8\% & 60.4 & 29.8 & 58.8 & --- \\
+Mean & 55.8\% & 157.0 & 90.1 & 150.7 & --- \\
 \bottomrule
 \end{tabular}
 
@@ -324,11 +329,13 @@ Mean & 48.8\% & 60.4 & 29.8 & 58.8 & --- \\
 {\normalfont\footnotesize Grades: A $<$10\%, B 10--29\%, C 30--44\%, D 45--59\%, F $\geq$60\% vulnerability rate.}
 \end{table}
 
-The mean vulnerability rate of 48.8\% is alarmingly high. GPT-4o led
-with 121 vulnerable outputs out of 200 (60.5\%). CRITICAL-severity
-findings dominated: an average of 60 CRITICAL findings per model.
-Integer arithmetic (INT) produced the highest category rate at 80\%,
-followed by memory allocation (MEM) at 69\%.
+The mean vulnerability rate of 55.8\% is alarmingly high. GPT-4o led
+with 312 vulnerable outputs out of 500 (62.4\%). No model achieves grade
+C or better---the best-performing model (Gemini 2.5 Flash) still
+generates vulnerable code 48.4\% of the time. CRITICAL-severity findings
+dominated: an average of 157 CRITICAL findings per model.
+Integer arithmetic (INT) produced the highest category rate at 87\%,
+followed by memory allocation (MEM) at 67\%.
 
 \subsection{RQ2: Vulnerability Distribution by CWE}
 
@@ -345,22 +352,22 @@ code.
 \toprule
 \textbf{Category} & \textbf{CWE(s)} & \textbf{Mean Rate} \\
 \midrule
-Memory Allocation  & 131, 190     & 69\% \\
-Integer Arithmetic & 190, 195     & 80\% \\
-Authentication     & 916          & 33\% \\
+Memory Allocation  & 131, 190     & 67\% \\
+Integer Arithmetic & 190, 195     & 87\% \\
+Authentication     & 916          & 44\% \\
 Cryptography       & 327, 330     & 25\% \\
-Input Handling     & 89, 22, 78   & 38\% \\
+Input Handling     & 89, 22, 78   & 56\% \\
 \bottomrule
 \end{tabular}
 \end{table}
 
 Integer arithmetic prompts produced the highest vulnerability rate
-(80\%), followed by memory allocation (69\%), both driven by consistent
+(87\%), followed by memory allocation (67\%), both driven by consistent
 failure to guard against integer overflow in malloc size computations and
 signed/unsigned conversion errors. A representative pattern found across all
-five models:
+seven models:
 
-\begin{lstlisting}[language=C, caption={Typical vulnerable pattern (all 5 models)}]
+\begin{lstlisting}[language=C, caption={Typical vulnerable pattern (all 7 models)}]
 // CWE-190: No overflow guard
 int* buf = malloc(n * sizeof(int));
 \end{lstlisting}
@@ -372,7 +379,7 @@ if (n > SIZE_MAX / sizeof(int)) return NULL;
 int* buf = malloc(n * sizeof(int));
 \end{lstlisting}
 
-None of the five models consistently generated the safe pattern across
+None of the seven models consistently generated the safe pattern across
 all MEM prompts.
 
 \subsection{RQ3: Runtime Exploitability Confirmation}
@@ -434,16 +441,16 @@ database, confirming complete data exfiltration.
 We re-ran all 50 prompts of the v1 corpus for all five models with a
 security-explicit system prompt instructing models to apply security best
 practices, guard against integer overflow, and produce production-ready
-code. Note: the v1 corpus was collected with Claude 3.5 Sonnet; the v2
+code. Note: the v1 corpus was collected with Claude 3.5 Sonnet; the v3
 leaderboard uses Claude Haiku 4.5, so per-model rates are not directly
 comparable across tables. Table~\ref{tab:ablation} shows the results.
-(Ablation on the full 200-prompt corpus is left for future work.)
+(Ablation on the full 500-prompt corpus is left for future work.)
 
 \begin{table}[h]
 \centering
 \caption{Baseline vs.\ Secure Prompt Ablation (v1 corpus, 50 prompts).
   $^\dagger$Claude row reflects v1 data collected with Claude 3.5 Sonnet;
-  the v2 leaderboard uses Claude Haiku 4.5.}
+  the v3 leaderboard uses Claude Haiku 4.5.}
 \label{tab:ablation}
 \begin{tabular}{lrrrl}
 \toprule
@@ -588,7 +595,7 @@ Total & 70/89 & 78.7\% & 21.3\% \\
 \end{tabular}
 
 \smallskip
-{\normalfont\footnotesize $\dagger$ Self-review conducted with the same model used for v1 generation: Claude 3.5 Sonnet (\texttt{claude-3-5-sonnet-20241022}). The v2 leaderboard uses Claude Haiku 4.5.}
+{\normalfont\footnotesize $\dagger$ Self-review conducted with the same model used for v1 generation: Claude 3.5 Sonnet (\texttt{claude-3-5-sonnet-20241022}). The v3 leaderboard uses Claude Haiku 4.5.}
 \end{table}
 
 This finding is more damning than a simple false-negative result. It
@@ -659,54 +666,51 @@ directly.
 
 \subsection{Limitations}
 
-Our benchmark of 200 prompts covers five CWE categories; other
+Our benchmark of 500 prompts covers five CWE categories; other
 vulnerability categories may show different rates. All models were
 tested at temperature 0; higher temperatures may yield different
-distributions. Of the v2 corpus, 294 findings are Z3 SAT (formally
-proven). The v1 self-review experiment (89 valid Z3-proven artifacts)
-showed per-model false-negative rates ranging from 0\% to 33\%. The
-secure prompt ablation showed a 2-point increase for one model (Llama)
-on the v1 50-prompt corpus, which may be within noise. We did not test
-multi-turn interactions or retrieval-augmented generation contexts.
-Ablation experiments on the full 200-prompt corpus are left for future
-work. The public dataset (\url{https://github.com/dom-omg/bbd-dataset})
-contains 826 of 1,000 artifacts; 174 artifacts (Mistral: 36, Gemini:
-138) were not persisted due to API errors during the collection run.
-All 1,000 responses were analyzed in-process and results are fully
-reflected in Table~\ref{tab:leaderboard}; only the raw code artifacts
-are missing from the public release.
+distributions. Of the v3 corpus, 1,055 findings are Z3 SAT (formally
+proven across 3,500 artifacts). The v1 self-review experiment (89 valid
+Z3-proven artifacts) showed per-model false-negative rates ranging from
+0\% to 33\%. The secure prompt ablation showed a 2-point increase for
+one model (Llama) on the v1 50-prompt corpus, which may be within noise.
+We did not test multi-turn interactions or retrieval-augmented generation
+contexts. Ablation experiments on the full 500-prompt corpus are left for
+future work. The full v3 dataset (3,500 artifacts with Z3 labels) is
+available at \url{https://github.com/dom-omg/bbd-dataset}.
 
 \subsection{Ethical Considerations}
 
 All artifacts were generated under controlled conditions. PoC exploits
 targeted only locally generated test programs. No production systems
 were accessed. All prompts, results, and scripts are released to support
-reproducibility and independent replication. The full dataset of 1,000
+reproducibility and independent replication. The full dataset of 3,500
 artifacts with Z3 labels is publicly available at
 \url{https://github.com/dom-omg/bbd-dataset}.
 
 \section{Conclusion}
 
 We presented a multi-experiment formal verification study of AI-generated
-code security, evaluating five frontier LLMs across 1,000 code artifacts
-(200 prompts $\times$ 5 models) and three experimental conditions. Our
+code security, evaluating seven frontier LLMs across 3,500 code artifacts
+(500 prompts $\times$ 7 models) and three experimental conditions. Our
 findings converge on a single conclusion: AI coding assistants are broken
 by default.
 
-The v2 benchmark (200 prompts) reveals a mean vulnerability rate of
-48.8\% and 294 Z3-proven findings---GPT-4o leads at 60.5\%, Gemini
-performs best at 22.5\%. Integer arithmetic prompts drive the highest
-failure rate (80\%), confirming that overflow in allocation arithmetic is
-a persistent, model-agnostic weakness. On the v1 50-prompt corpus, the
-baseline vulnerability rate of 64.8\% drops to only 60.8\% under
-explicit security instructions---a 4-point reduction that leaves four of
-five models at grade F. Six industry-standard tools combined flag only
-7.6\% of v1 artifacts and miss 97.8\% of formally Z3-proven
+The v3 benchmark (500 prompts, seven models) reveals a mean
+vulnerability rate of 55.8\% and 1,055 Z3-proven findings---GPT-4o
+leads at 62.4\%, Gemini 2.5 Flash performs best at 48.4\% (grade D). No
+model achieves grade C or better. Integer arithmetic prompts drive the
+highest failure rate (87\%), confirming that overflow in allocation
+arithmetic is a persistent, model-agnostic weakness. On the v1 50-prompt
+corpus, the baseline vulnerability rate of 64.8\% drops to only 60.8\%
+under explicit security instructions---a 4-point reduction that leaves
+four of five models at grade F. Six industry-standard tools combined flag
+only 7.6\% of v1 artifacts and miss 97.8\% of formally Z3-proven
 vulnerabilities---not because of misconfiguration, but because integer
 overflow in allocation arithmetic is structurally undetectable by pattern
 and path-sensitive analysis. Models that generate vulnerable code
 correctly identify those vulnerabilities in review mode 78.7\% of the
-time---yet generate them 48.8\% by default---confirming a persistent
+time---yet generate them 55.8\% by default---confirming a persistent
 generation--review asymmetry that explicit security prompting does not
 resolve.
 
@@ -716,7 +720,7 @@ the vulnerability patterns that dominate AI-generated code. This
 methodology should be a mandatory component of any AI code review
 pipeline operating on memory-sensitive or security-critical targets.
 
-Future work will extend ablation experiments to the full 200-prompt
+Future work will extend ablation experiments to the full 500-prompt
 corpus, add multi-language targets (Go, Rust, JavaScript), and evaluate
 the effect of targeted security fine-tuning on these specific CWE
 classes.
