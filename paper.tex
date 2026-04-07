@@ -64,7 +64,8 @@ solver via the COBALT analysis pipeline, producing mathematical
 satisfiability witnesses rather than pattern-based heuristics.
 
 Across all models, \textbf{55.8\%} of artifacts contain at least one
-formally proven vulnerability (1,055 Z3 SAT findings). GPT-4o leads at
+COBALT-identified vulnerability; of these, 1,055 are formally proven
+via Z3 satisfiability witnesses (Z3 SAT). GPT-4o leads at
 62.4\% (grade F); Gemini 2.5 Flash performs best at 48.4\% (grade D).
 No model achieves a grade better than D. Six of seven representative
 findings are confirmed with runtime crashes under GCC AddressSanitizer.
