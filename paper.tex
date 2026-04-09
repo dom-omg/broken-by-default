@@ -58,7 +58,7 @@ AI coding assistants are now used to generate production code in
 security-sensitive domains, yet the exploitability of their outputs
 remains unquantified. We address this gap with \textit{Broken by
 Default}: a formal verification study of 3,500 code artifacts generated
-by seven frontier LLMs across 500 security-critical prompts (five CWE
+by seven widely-deployed LLMs across 500 security-critical prompts (five CWE
 categories, 100 prompts each). Each artifact is subjected to the Z3 SMT
 solver via the COBALT analysis pipeline, producing mathematical
 satisfiability witnesses rather than pattern-based heuristics.
@@ -190,7 +190,7 @@ exists; ours measures baseline generation without steering intervention.
 Our work differs in four key dimensions: (1) we apply formal Z3 SMT
 verification rather than pattern matching---producing mathematical proof
 of exploitability with concrete witness values; (2) we evaluate seven
-current frontier models simultaneously across identical prompts; (3) we
+widely-deployed production models simultaneously across identical prompts; (3) we
 provide runtime exploitability confirmation via ASAN; and (4) we
 quantify the detection gap against six industry tools, including
 heavyweight C analyzers and CodeQL, demonstrating that 97.8\% of
@@ -227,8 +227,11 @@ and returns them as a dynamically allocated array.''}
 
 \subsection{Model Selection and API Configuration}
 
-Seven models were evaluated, selected to represent the frontier of
-publicly accessible LLMs as of Q1--Q2 2026:
+Seven models were evaluated, selected for API accessibility and cost
+feasibility at scale across 3,500 artifacts. Models represent widely-deployed
+production LLMs available during the study period (Q1--Q2 2026). Higher-capability
+variants (e.g., Claude Opus, GPT-o3, Gemini 2.5 Pro) represent a direction
+for future work, though the structural findings are expected to generalize across tiers:
 
 \begin{table}[h]
 \centering
@@ -251,6 +254,52 @@ All models were queried at temperature 0 to ensure reproducibility.
 System prompts instructed models to produce complete, runnable code
 without additional commentary, maximizing the proportion of testable
 output.
+
+\subsection{Python Extension: Cross-Language Validation (v4)}
+
+The v3 corpus targets C-specific vulnerability classes (CWE-131, CWE-190,
+CWE-195) where Z3 bit-vector arithmetic provides the strongest formal
+guarantees. A natural challenge to these findings is that they may reflect
+C's memory-unsafe semantics rather than a general failure of AI code
+generation. To address this, we construct a second 500-prompt Python corpus
+(v4) covering ten Python-native CWE families: CWE-502 (unsafe
+deserialization), CWE-78 (command injection), CWE-89 (SQL injection),
+CWE-338 (weak PRNG), CWE-327 (broken cryptography), CWE-22 (path
+traversal), CWE-94 (template/code injection), CWE-918 (SSRF), CWE-287
+(authentication bypass), and CWE-611 (XXE). Prompts were designed around
+Python-native security failure modes---\texttt{pickle}/YAML deserialization,
+\texttt{subprocess} shell composition, Jinja2 template rendering, and
+\texttt{secrets} vs.\ \texttt{random} misuse---rather than porting C-style
+prompts into Python.
+
+\paragraph{Model selection rationale.}
+Four models were selected for the v4 Python extension to maximize
+cross-version comparability and tier coverage:
+
+\begin{itemize}
+  \item \textbf{GPT-4.1} (\texttt{gpt-4.1}): identical to the v3 C corpus,
+    enabling a direct cross-language comparison on the same model. If
+    GPT-4.1 produces vulnerable Python at a similar rate to vulnerable C,
+    the failure mode is architectural, not language-specific.
+  \item \textbf{Claude Sonnet 4.6} (\texttt{claude-sonnet-4-6}): the
+    production-grade Anthropic deployment tier. v3 used Claude Haiku 4.5 as
+    a cost-efficient baseline; Sonnet 4.6 tests whether a stronger
+    capability tier changes the outcome.
+  \item \textbf{Gemini 2.5 Pro} (\texttt{gemini-2.5-pro}): Google's
+    flagship model. v3 used Gemini 2.5 Flash; Pro tests whether moving up
+    within the same model family reduces vulnerability rates.
+  \item \textbf{Llama 4 Maverick}
+    (\texttt{meta-llama/llama-4-maverick-17b-128e-instruct}): the stronger
+    open-weight successor to Llama 4 Scout (v3), served via Groq. Enables
+    within-family capability scaling analysis for open-weight models.
+\end{itemize}
+
+All four v4 models were queried at temperature 0 with the identical system
+prompt as v3. Python detection uses AST pattern matching; Z3 arithmetic
+proofs are not applied to Python artifacts, as the vulnerability surface
+shifts from integer arithmetic to semantic misuse (deserialization,
+injection, weak randomness). The framing is cross-language validation, not
+a homogeneous extension of the v3 pool.
 
 \subsection{COBALT Analysis Pipeline}
 
@@ -692,7 +741,7 @@ artifacts with Z3 labels is publicly available at
 \section{Conclusion}
 
 We presented a multi-experiment formal verification study of AI-generated
-code security, evaluating seven frontier LLMs across 3,500 code artifacts
+code security, evaluating seven widely-deployed LLMs across 3,500 code artifacts
 (500 prompts $\times$ 7 models) and three experimental conditions. Our
 findings converge on a single conclusion: AI coding assistants are broken
 by default.
